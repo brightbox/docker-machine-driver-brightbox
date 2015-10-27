@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/docker/machine/libmachine/drivers/plugin"
-	"github.com/nathanleclaire/docker-machine-driver-dind"
+	"github.com/NeilW/docker-machine-driver-brightbox"
 )
 
 func main() {
-	plugin.RegisterDriver(new(dind.Driver))
+	plugin.RegisterDriver(new(brightbox.Driver))
 }

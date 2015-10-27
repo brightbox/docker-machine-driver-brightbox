@@ -1,12 +1,12 @@
 default: build
 
-version := "v0.1.0"
-version_description := "The latest and greatest release of the Docker in Docker plugin."
-human_name := "Docker In Docker"
+version := "v0.0.1"
+version_description := "Docker Machine Driver Plugin to access Brightbox Cloud"
+human_name := "Brightbox Cloud Driver"
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
-github_user := "nathanleclaire"
+github_user := "NeilW"
 project := "github.com/$(github_user)/$(current_dir)"
 bin_suffix := ""
 

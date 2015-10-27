@@ -3,7 +3,7 @@
 set -e
 
 if [[ -z "$HUBUSER" ]]; then
-    export HUBUSER=nathanleclaire
+    export HUBUSER=NeilW
 fi
 
 if [[ $(docker images -q dindbase | wc -l) -eq 0 ]]; then
@@ -15,7 +15,7 @@ RUN chmod +x /bootstrap.sh' | docker build -t dindbootstrap -
     docker commit $(docker ps -lq) dindbase
 fi
 
-docker build -t ${HUBUSER}/docker-machine-dind .
+docker build -t ${HUBUSER}/docker-machine-brightbox .
 echo '*************************************************************************************
 * FINISHED BUILDING THE DOCKER IN DOCKER IMAGE - nathanleclaire/docker-machine-dind *
 *************************************************************************************'
