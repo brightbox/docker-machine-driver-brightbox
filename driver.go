@@ -171,6 +171,7 @@ func (d *Driver) PreCreateCheck() error {
 		if err != nil {
 			return err
 		}
+		log.Debugf("Brightbox API Call: List of Images")
 		images, err := client.Images()
 		if err != nil {
 			return err
@@ -182,11 +183,11 @@ func (d *Driver) PreCreateCheck() error {
 		d.Image = selectedImage.Id
 		d.SSHUser = selectedImage.Username
 	case d.SSHUser == "":
-		log.Debugf("Looking for Username for Image %s", d.Image)
 		client, err := d.getClient()
 		if err != nil {
 			return err
 		}
+		log.Debugf("Brightbox API Call: Looking for Username for Image %s", d.Image)
 		image, err := client.Image(d.Image)
 		if err != nil {
 			return err
@@ -201,12 +202,52 @@ func (d *Driver) Create() error {
 	return nil
 }
 
-func (d *Driver) GetState() (state.State, error) {
+func (d *Driver) getServerDetails() (*brightbox.Server, error) {
 	client, err := d.getClient()
 	if err != nil {
-		return state.Error, err
+		return nil, err
 	}
-	server, err := client.Server(d.Id)
+	log.Debugf("Brightbox API Call: Server Details for %s", d.Id)
+	return client.Server(d.Id)
+}
+
+func (d *Driver) GetIP() (string, error) {
+	server, err := d.getServerDetails()
+	if err != nil {
+		return "", err
+	}
+	switch {
+	case d.IPv6:
+		return ipv6Fqdn(server), nil
+	case len(server.CloudIPs) > 0:
+		return publicFqdn(server), nil
+	default:
+		return server.Fqdn, nil
+	}
+}
+
+func ipv6Fqdn(server *brightbox.Server) string {
+	return "ipv6." + server.Fqdn
+}
+
+func publicFqdn(server *brightbox.Server) string {
+	return "public." + server.Fqdn
+}
+
+func (d *Driver) GetSSHHostname() (string, error) {
+	return d.GetIP()
+}
+
+func (d *Driver) GetURL() (string, error) {
+	fqdn, err := d.GetIP()
+	if err != nil {
+		return "", err
+	}
+	return "tcp://" + fqdn + ":2376", nil
+}
+
+func (d *Driver) GetState() (state.State, error) {
+	server, err := d.getServerDetails()
 	if err != nil {
 		return state.Error, err
 	}
@@ -225,4 +266,64 @@ func (d *Driver) GetState() (state.State, error) {
 		return state.Error, nil
 	}
 	return state.None, nil
+}
+
+func (d *Driver) Start() error {
+	client, err := d.getClient()
+	if err != nil {
+		return err
+	}
+	log.Debugf("Brightbox API Call: Start Server %s", d.Id)
+	if err := client.StartServer(d.Id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Driver) Stop() error {
+	client, err := d.getClient()
+	if err != nil {
+		return err
+	}
+	log.Debugf("Brightbox API Call: Shutdown Server %s", d.Id)
+	if err := client.ShutdownServer(d.Id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Driver) Restart() error {
+	client, err := d.getClient()
+	if err != nil {
+		return err
+	}
+	log.Debugf("Brightbox API Call: Reboot Server %s", d.Id)
+	if err := client.RebootServer(d.Id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Driver) Kill() error {
+	client, err := d.getClient()
+	if err != nil {
+		return err
+	}
+	log.Debugf("Brightbox API Call: Stop Server %s", d.Id)
+	if err := client.StopServer(d.Id); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Driver) Remove() error {
+	client, err := d.getClient()
+	if err != nil {
+		return err
+	}
+	log.Debugf("Brightbox API Call: Destroy Server %s", d.Id)
+	if err := client.DestroyServer(d.Id); err != nil {
+		return err
+	}
+	return nil
 }
