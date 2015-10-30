@@ -25,8 +25,9 @@ type Driver struct {
 	drivers.BaseDriver
 	authdetails
 	brightbox.ServerOptions
+	MachineID	string
 	IPv6       bool
-	liveClient *brightbox.Client
+	activeClient *brightbox.Client
 }
 
 //Backward compatible Driver factory method.  Using new(brightbox.Driver)
@@ -109,7 +110,7 @@ func (d *Driver) DriverName() string {
 
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.APIClient = flags.String("brightbox-client")
-	d.apiSecret = flags.String("brightbox-client-secret")
+	d.APISecret = flags.String("brightbox-client-secret")
 	d.UserName = flags.String("brightbox-user-name")
 	d.password = flags.String("brightbox-password")
 	d.Account = flags.String("brightbox-account")
@@ -123,20 +124,22 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	}
 	d.Zone = flags.String("brightbox-zone")
 	d.SSHPort = defaultSSHPort
+	serverName := d.GetMachineName() + " (docker-machine)"
+	d.Name = &serverName
 	return d.checkConfig()
 }
 
 // Try and avoid authenticating more than once
 // Store the authenticated api client in the driver for future use
 func (d *Driver) getClient() (*brightbox.Client, error) {
-	if d.liveClient != nil {
+	if d.activeClient != nil {
 		log.Debug("Reusing authenticated Brightbox client")
-		return d.liveClient, nil
+		return d.activeClient, nil
 	}
 	log.Debug("Authenticating Credentials against Brightbox API")
 	client, err := d.authenticatedClient()
 	if err == nil {
-		d.liveClient = client
+		d.activeClient = client
 		log.Debug("Using authenticated Brightbox client")
 	}
 	return client, err
@@ -208,7 +211,7 @@ func (d *Driver) Create() error {
 	if err != nil {
 		return err
 	}
-	d.Id = server.Id
+	d.MachineID = server.Id
 	return nil
 }
 
@@ -217,8 +220,8 @@ func (d *Driver) getServerDetails() (*brightbox.Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Debugf("Brightbox API Call: Server Details for %s", d.Id)
-	return client.Server(d.Id)
+	log.Debugf("Brightbox API Call: Server Details for %s", d.MachineID)
+	return client.Server(d.MachineID)
 }
 
 func (d *Driver) GetIP() (string, error) {
@@ -228,10 +231,15 @@ func (d *Driver) GetIP() (string, error) {
 	}
 	switch {
 	case d.IPv6:
-		return ipv6Fqdn(server), nil
+		tmp := ipv6Fqdn(server)
+		log.Debugf("Returning IPV6 address %s", tmp)
+		return tmp, nil
 	case len(server.CloudIPs) > 0:
-		return publicFqdn(server), nil
+		tmp := publicFqdn(server)
+		log.Debugf("Returning public address %s", tmp)
+		return tmp, nil
 	default:
+		log.Debugf("Returning private address %s", server.Fqdn)
 		return server.Fqdn, nil
 	}
 }
@@ -283,8 +291,8 @@ func (d *Driver) Start() error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("Brightbox API Call: Start Server %s", d.Id)
-	if err := client.StartServer(d.Id); err != nil {
+	log.Debugf("Brightbox API Call: Start Server %s", d.MachineID)
+	if err := client.StartServer(d.MachineID); err != nil {
 		return err
 	}
 	return nil
@@ -295,8 +303,8 @@ func (d *Driver) Stop() error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("Brightbox API Call: Shutdown Server %s", d.Id)
-	if err := client.ShutdownServer(d.Id); err != nil {
+	log.Debugf("Brightbox API Call: Shutdown Server %s", d.MachineID)
+	if err := client.ShutdownServer(d.MachineID); err != nil {
 		return err
 	}
 	return nil
@@ -307,8 +315,8 @@ func (d *Driver) Restart() error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("Brightbox API Call: Reboot Server %s", d.Id)
-	if err := client.RebootServer(d.Id); err != nil {
+	log.Debugf("Brightbox API Call: Reboot Server %s", d.MachineID)
+	if err := client.RebootServer(d.MachineID); err != nil {
 		return err
 	}
 	return nil
@@ -319,8 +327,8 @@ func (d *Driver) Kill() error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("Brightbox API Call: Stop Server %s", d.Id)
-	if err := client.StopServer(d.Id); err != nil {
+	log.Debugf("Brightbox API Call: Stop Server %s", d.MachineID)
+	if err := client.StopServer(d.MachineID); err != nil {
 		return err
 	}
 	return nil
@@ -331,8 +339,8 @@ func (d *Driver) Remove() error {
 	if err != nil {
 		return err
 	}
-	log.Debugf("Brightbox API Call: Destroy Server %s", d.Id)
-	if err := client.DestroyServer(d.Id); err != nil {
+	log.Debugf("Brightbox API Call: Destroy Server %s", d.MachineID)
+	if err := client.DestroyServer(d.MachineID); err != nil {
 		return err
 	}
 	return nil
