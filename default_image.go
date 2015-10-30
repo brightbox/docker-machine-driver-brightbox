@@ -9,14 +9,17 @@ import (
 )
 
 const (
-	defaultArch     = "x86_64"
-	defaultImageTag = "ubuntu"
+	DefaultArch     = "x86_64"
+	DefaultImageTag = "ubuntu" //Looked for in Image Name
 )
 
-//Pass in a list of Images obtained from the API and a reference to the default
-//image within that list selected according to the constants in this file
-func GetDefaultImage(images []brightbox.Image) (*brightbox.Image, error) {
-	filteredImages := filterImages(images, defaultImage)
+/*
+Pass in a list of Images obtained from the API receive a reference to
+the default image from that list selected according to the constants in
+this file.  If no Image matches the default you will get an error.
+*/
+func GetdefaultImage(images []brightbox.Image) (*brightbox.Image, error) {
+	filteredImages := filterImages(images, DefaultImage)
 	switch len(filteredImages) {
 	case 0:
 		return nil, fmt.Errorf("Unable to find a default Image")
@@ -36,7 +39,7 @@ func filterImages(images []brightbox.Image, selector func(*brightbox.Image) bool
 }
 
 func defaultImage(image *brightbox.Image) bool {
-	return image.Official && image.Arch == defaultArch && strings.Contains(image.Name, defaultImageTag)
+	return image.Official && image.Arch == DefaultArch && strings.Contains(image.Name, DefaultImageTag)
 }
 
 type imagesByAgeDescending []*brightbox.Image
