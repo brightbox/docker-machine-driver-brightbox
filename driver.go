@@ -9,7 +9,7 @@ import (
 	"github.com/docker/machine/libmachine/log"
 	"github.com/docker/machine/libmachine/mcnflag"
 	//	"github.com/docker/machine/libmachine/ssh"
-	//"github.com/docker/machine/libmachine/state"
+	"github.com/docker/machine/libmachine/state"
 )
 
 const (
@@ -29,8 +29,8 @@ type Driver struct {
 	liveClient *brightbox.Client
 }
 
-//Backward compatible Driver factory method
-//Using new(brightbox.Driver) is preferred
+//Backward compatible Driver factory method.  Using new(brightbox.Driver)
+//is preferred
 func NewDriver(hostName, storePath string) Driver {
 	return Driver{
 		BaseDriver: drivers.BaseDriver{
@@ -195,4 +195,34 @@ func (d *Driver) PreCreateCheck() error {
 	}
 	log.Debugf("Image %s selected. SSH user is %s", d.Image, d.SSHUser)
 	return nil
+}
+
+func (d *Driver) Create() error {
+	return nil
+}
+
+func (d *Driver) GetState() (state.State, error) {
+	client, err := d.getClient()
+	if err != nil {
+		return state.Error, err
+	}
+	server, err := client.Server(d.Id)
+	if err != nil {
+		return state.Error, err
+	}
+	switch server.Status {
+	case "creating":
+		return state.Starting, nil
+	case "active":
+		return state.Running, nil
+	case "inactive":
+		return state.Paused, nil
+	case "deleting":
+		return state.Stopping, nil
+	case "deleted":
+		return state.Stopped, nil
+	case "failed", "unavailable":
+		return state.Error, nil
+	}
+	return state.None, nil
 }
