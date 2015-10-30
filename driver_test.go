@@ -42,7 +42,7 @@ func getDefaultTestDriverFlags() *DriverOptionsMock {
 			"brightbox-api-url":        brightbox.DefaultRegionApiURL,
 			"brightbox-ipv6":           false,
 			"brightbox-zone":           "",
-			"brightbox-image":          "",
+			"brightbox-image":          "img-freda",
 			"brightbox-type":           "",
 			"brightbox-security-group": []string(nil),
 		},

@@ -199,6 +199,16 @@ func (d *Driver) PreCreateCheck() error {
 }
 
 func (d *Driver) Create() error {
+	client, err := d.getClient()
+	if err != nil {
+		return err
+	}
+	log.Debugf("Brightbox API Call: Create Server using image %s", d.Image)
+	server, err := client.CreateServer(&d.ServerOptions)
+	if err != nil {
+		return err
+	}
+	d.Id = server.Id
 	return nil
 }
 
