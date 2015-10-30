@@ -6,14 +6,6 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-const (
-	defaultRegion = "gb1"
-)
-
-var regionURL = map[string]string{
-	defaultRegion: brightbox.RegionGB1,
-}
-
 var infrastructureScope = []string{"infrastructure"}
 
 type authdetails struct {
@@ -22,7 +14,7 @@ type authdetails struct {
 	UserName  string
 	password  string
 	Account   string
-	Region    string
+	ApiURL string
 }
 
 // Authenticate the details and return a client
@@ -37,11 +29,7 @@ func (authd *authdetails) authenticatedClient() (*brightbox.Client, error) {
 }
 
 func (authd *authdetails) tokenURL() string {
-	return authd.apiURL() + "/token"
-}
-
-func (authd *authdetails) apiURL() string {
-	return regionURL[authd.Region]
+	return authd.ApiURL + "/token"
 }
 
 func (authd *authdetails) passwordAuth() (*brightbox.Client, error) {
@@ -58,7 +46,7 @@ func (authd *authdetails) passwordAuth() (*brightbox.Client, error) {
 		return nil, err
 	}
 	oauth_connection := conf.Client(oauth2.NoContext, token)
-	return brightbox.NewClient(authd.apiURL(), authd.Account, oauth_connection)
+	return brightbox.NewClient(authd.ApiURL, authd.Account, oauth_connection)
 }
 
 func (authd *authdetails) apiClientAuth() (*brightbox.Client, error) {
@@ -69,5 +57,5 @@ func (authd *authdetails) apiClientAuth() (*brightbox.Client, error) {
 		TokenURL:     authd.tokenURL(),
 	}
 	oauth_connection := conf.Client(oauth2.NoContext)
-	return brightbox.NewClient(authd.apiURL(), authd.Account, oauth_connection)
+	return brightbox.NewClient(authd.ApiURL, authd.Account, oauth_connection)
 }

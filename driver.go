@@ -69,10 +69,10 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			Usage:  "Brightbox Cloud Account to operate on",
 		},
 		mcnflag.StringFlag{
-			EnvVar: "BRIGHTBOX_REGION",
-			Name:   "brightbox-region",
-			Usage:  "Brightbox Cloud Region",
-			Value:  defaultRegion,
+			EnvVar: "BRIGHTBOX_API_URL",
+			Name:   "brightbox-api-url",
+			Usage:  "Brightbox Cloud Api URL for selected Region",
+			Value:  brightbox.DefaultRegionApiURL,
 		},
 		mcnflag.BoolFlag{
 			EnvVar: "BRIGHTBOX_IPV6",
@@ -113,7 +113,7 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.password = flags.String("brightbox-password")
 	d.Account = flags.String("brightbox-account")
 	d.Image = flags.String("brightbox-image")
-	d.Region = flags.String("brightbox-region")
+	d.ApiURL = flags.String("brightbox-api-url")
 	d.ServerType = flags.String("brightbox-type")
 	d.IPv6 = flags.Bool("brightbox-ipv6")
 	group_list := flags.StringSlice("brightbox-security-group")
@@ -142,15 +142,11 @@ func (d *Driver) getClient() (*brightbox.Client, error) {
 }
 
 const (
-	errorInvalidRegion        = "Unable to find region name %s"
 	errorMandatoryEnvOrOption = "%s must be specified either using the environment variable %s or the CLI option %s"
 )
 
 //Statically sanity check flag settings.
 func (d *Driver) checkConfig() error {
-	if _, ok := regionURL[d.Region]; !ok {
-		return fmt.Errorf(errorInvalidRegion, d.Region)
-	}
 	switch {
 	case d.UserName != "" || d.password != "":
 		switch {

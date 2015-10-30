@@ -1,6 +1,9 @@
 package brightbox
 
-import "testing"
+import (
+	"testing"
+	"github.com/brightbox/gobrightbox"
+)
 
 type DriverOptionsMock struct {
 	Data map[string]interface{}
@@ -36,26 +39,13 @@ func getDefaultTestDriverFlags() *DriverOptionsMock {
 			"brightbox-user-name":      "",
 			"brightbox-password":       "",
 			"brightbox-account":        "",
-			"brightbox-region":         "gb1",
+			"brightbox-api-url":        brightbox.DefaultRegionApiURL,
 			"brightbox-ipv6":           false,
 			"brightbox-zone":           "",
 			"brightbox-image":          "",
 			"brightbox-type":           "",
 			"brightbox-security-group": []string(nil),
 		},
-	}
-}
-
-func TestRegionValidation(t *testing.T) {
-	drive := new(Driver)
-
-	flags := getDefaultTestDriverFlags()
-	if err := drive.SetConfigFromFlags(flags); err != nil {
-		t.Error(err)
-	}
-	flags.Data["brightbox-region"] = "jp1"
-	if err := drive.SetConfigFromFlags(flags); err == nil {
-		t.Error("Expected region to be rejected")
 	}
 }
 
@@ -83,5 +73,12 @@ func TestClientValidation(t *testing.T) {
 	flags.Data["brightbox-client-secret"] = defaultClientSecret
 	if err := drive.SetConfigFromFlags(flags); err == nil {
 		t.Error("Missing Client ID not picked up")
+	}
+}
+
+func TestDriverName(t *testing.T) {
+	drive := new(Driver)
+	if drive.DriverName() != "brightbox" {
+		t.Error("Driver Name should be brightbox")
 	}
 }
