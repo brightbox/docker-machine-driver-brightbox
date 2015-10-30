@@ -10,13 +10,15 @@ import (
 
 const (
 	DefaultArch     = "x86_64"
-	DefaultImageTag = "ubuntu" //Looked for in Image Name
+	//The tag is looked for in the name of the image
+	DefaultImageTag = "ubuntu"
 )
 
 /*
-Pass in a list of Images obtained from the API receive a reference to
-the default image from that list selected according to the constants in
-this file.  If no Image matches the default you will get an error.
+Searches the supplied Image List for official Images and selects one
+according to the constant definitions in this file. Returns a reference
+to that Image.  If no Image matches the default settings you will get
+an error.
 */
 func GetDefaultImage(images []brightbox.Image) (*brightbox.Image, error) {
 	filteredImages := filterImages(images, defaultImage)
