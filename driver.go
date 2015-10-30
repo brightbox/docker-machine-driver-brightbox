@@ -160,3 +160,38 @@ func (d *Driver) checkConfig() error {
 	}
 	return nil
 }
+
+// Make sure that the image details are complete
+func (d *Driver) PreCreateCheck() error {
+	switch {
+	case d.Image == "":
+		log.Info("No image specified. Looking for default image")
+		client, err := d.getClient()
+		if err != nil {
+			return err
+		}
+		images, err := client.Images()
+		if err != nil {
+			return err
+		}
+		selectedImage, err := GetDefaultImage(*images)
+		if err != nil {
+			return err
+		}
+		d.Image = selectedImage.Id
+		d.SSHUser = selectedImage.Username
+	case d.SSHUser == "":
+		log.Debugf("Looking for Username for Image %s", d.Image)
+		client, err := d.getClient()
+		if err != nil {
+			return err
+		}
+		image, err := client.Image(d.Image)
+		if err != nil {
+			return err
+		}
+		d.SSHUser = image.Username
+	}
+	log.Debugf("Image %s selected. SSH user is %s", d.Image, d.SSHUser)
+	return nil
+}

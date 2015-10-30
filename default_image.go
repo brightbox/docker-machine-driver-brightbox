@@ -21,7 +21,7 @@ func GetDefaultImage(images []brightbox.Image) (*brightbox.Image, error) {
 	case 0:
 		return nil, fmt.Errorf("Unable to find a default Image")
 	}
-	sort.Sort(ImagesByAgeDescending(filteredImages))
+	sort.Sort(imagesByAgeDescending(filteredImages))
 	return filteredImages[0], nil
 }
 
@@ -39,10 +39,10 @@ func defaultImage(image *brightbox.Image) bool {
 	return image.Official && image.Arch == defaultArch && strings.Contains(image.Name, defaultImageTag)
 }
 
-type ImagesByAgeDescending []*brightbox.Image
+type imagesByAgeDescending []*brightbox.Image
 
-func (a ImagesByAgeDescending) Len() int      { return len(a) }
-func (a ImagesByAgeDescending) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
-func (a ImagesByAgeDescending) Less(i, j int) bool {
+func (a imagesByAgeDescending) Len() int      { return len(a) }
+func (a imagesByAgeDescending) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a imagesByAgeDescending) Less(i, j int) bool {
 	return strings.ToLower(a[i].Name) > strings.ToLower(a[j].Name)
 }
