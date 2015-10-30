@@ -18,8 +18,8 @@ Pass in a list of Images obtained from the API receive a reference to
 the default image from that list selected according to the constants in
 this file.  If no Image matches the default you will get an error.
 */
-func GetdefaultImage(images []brightbox.Image) (*brightbox.Image, error) {
-	filteredImages := filterImages(images, DefaultImage)
+func GetDefaultImage(images []brightbox.Image) (*brightbox.Image, error) {
+	filteredImages := filterImages(images, defaultImage)
 	switch len(filteredImages) {
 	case 0:
 		return nil, fmt.Errorf("Unable to find a default Image")
