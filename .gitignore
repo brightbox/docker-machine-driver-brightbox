@@ -1,2 +1,2 @@
 *.swp
-docker-machine-driver-dind*
+docker-machine-driver-*
