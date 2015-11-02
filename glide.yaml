@@ -1,0 +1,15 @@
+parent: null
+package: github.com/brightbox/docker-machine-driver-brightbox/main
+import:
+- package: github.com/brightbox/gobrightbox
+- package: github.com/docker/machine
+  subpackages:
+  - /libmachine/drivers
+  - /libmachine/log
+  - /libmachine/mcnflag
+  - /libmachine/ssh
+  - /libmachine/state
+- package: golang.org/x/oauth2
+- package: golang.org/x/net
+  subpackages:
+  - /context
