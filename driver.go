@@ -272,18 +272,22 @@ func (d *Driver) GetState() (state.State, error) {
 	}
 	switch server.Status {
 	case "creating":
+		log.Debugf("Server %s is Starting", d.MachineID)
 		return state.Starting, nil
 	case "active":
+		log.Debugf("Server %s is Running", d.MachineID)
 		return state.Running, nil
-	case "inactive":
-		return state.Paused, nil
 	case "deleting":
+		log.Debugf("Server %s is Stopping", d.MachineID)
 		return state.Stopping, nil
-	case "deleted":
+	case "deleted", "inactive":
+		log.Debugf("Server %s is Stopped", d.MachineID)
 		return state.Stopped, nil
 	case "failed", "unavailable":
+		log.Debugf("Server %s is Errored", d.MachineID)
 		return state.Error, nil
 	}
+	log.Debugf("Server %s: state not detected", d.MachineID)
 	return state.None, nil
 }
 
