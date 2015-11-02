@@ -1,6 +1,6 @@
 FROM golang:1.5
 
-ENV REPO github.com/NeilW/docker-machine-driver-brightbox
+ENV REPO github.com/brightbox/docker-machine-driver-brightbox
 
 RUN go get github.com/aktau/github-release
 WORKDIR /go/src/${REPO}

@@ -6,7 +6,7 @@ human_name := "Brightbox Cloud Driver"
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
-github_user := "NeilW"
+github_user := "brightbox"
 project := "github.com/$(github_user)/$(current_dir)"
 bin_suffix := ""
 

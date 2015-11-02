@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/docker/machine/libmachine/drivers/plugin"
-	"github.com/NeilW/docker-machine-driver-brightbox"
+	"github.com/brightbox/docker-machine-driver-brightbox"
 )
 
 func main() {
