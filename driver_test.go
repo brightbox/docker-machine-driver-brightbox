@@ -1,8 +1,8 @@
 package brightbox
 
 import (
-	"testing"
 	"github.com/brightbox/gobrightbox"
+	"testing"
 )
 
 type DriverOptionsMock struct {
@@ -28,23 +28,23 @@ func (d DriverOptionsMock) Bool(key string) bool {
 func getDefaultTestDriverFlags() *DriverOptionsMock {
 	return &DriverOptionsMock{
 		Data: map[string]interface{}{
-			"name":                     "test",
-			"url":                      "unix:///var/run/docker.sock",
-			"swarm":                    false,
-			"swarm-host":               "",
-			"swarm-master":             false,
-			"swarm-discovery":          "",
-			"brightbox-client":         "xyz",
-			"brightbox-client-secret":  "abcdefg",
-			"brightbox-user-name":      "",
-			"brightbox-password":       "",
-			"brightbox-account":        "",
-			"brightbox-api-url":        brightbox.DefaultRegionApiURL,
-			"brightbox-ipv6":           false,
-			"brightbox-zone":           "",
-			"brightbox-image":          "img-freda",
-			"brightbox-type":           "",
-			"brightbox-security-group": []string(nil),
+			"name":                    "test",
+			"url":                     "unix:///var/run/docker.sock",
+			"swarm":                   false,
+			"swarm-host":              "",
+			"swarm-master":            false,
+			"swarm-discovery":         "",
+			"brightbox-client":        "xyz",
+			"brightbox-client-secret": "abcdefg",
+			"brightbox-user-name":     "",
+			"brightbox-password":      "",
+			"brightbox-account":       "",
+			"brightbox-api-url":       brightbox.DefaultRegionApiURL,
+			"brightbox-ipv4":          true,
+			"brightbox-zone":          "",
+			"brightbox-image":         "img-freda",
+			"brightbox-type":          "",
+			"brightbox-group":         []string(nil),
 		},
 	}
 }

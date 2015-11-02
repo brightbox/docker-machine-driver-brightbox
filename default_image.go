@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	DefaultArch     = "x86_64"
+	DefaultArch = "x86_64"
 	//The tag is looked for in the name of the image
 	DefaultImageTag = "CoreOS"
 )

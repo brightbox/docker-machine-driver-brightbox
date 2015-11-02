@@ -2,9 +2,9 @@
 package brightbox
 
 import (
+	"encoding/base64"
 	"fmt"
 	"io/ioutil"
-	"encoding/base64"
 
 	"github.com/brightbox/gobrightbox"
 	"github.com/docker/machine/libmachine/drivers"
@@ -27,8 +27,8 @@ type Driver struct {
 	drivers.BaseDriver
 	authdetails
 	brightbox.ServerOptions
-	MachineID	string
-	IPv6       bool
+	MachineID    string
+	IPv6         bool
 	activeClient *brightbox.Client
 }
 
@@ -79,9 +79,9 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			Value:  brightbox.DefaultRegionApiURL,
 		},
 		mcnflag.BoolFlag{
-			EnvVar: "BRIGHTBOX_IPV6",
-			Name:   "brightbox-ipv6",
-			Usage:  "Access server directly over IPv6",
+			EnvVar: "BRIGHTBOX_IPV4",
+			Name:   "brightbox-ipv4",
+			Usage:  "Access server over IPv4 rather than IPv6",
 		},
 		mcnflag.StringFlag{
 			EnvVar: "BRIGHTBOX_ZONE",
@@ -119,7 +119,7 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.Image = flags.String("brightbox-image")
 	d.ApiURL = flags.String("brightbox-api-url")
 	d.ServerType = flags.String("brightbox-type")
-	d.IPv6 = flags.Bool("brightbox-ipv6")
+	d.IPv6 = !flags.Bool("brightbox-ipv4")
 	group_list := flags.StringSlice("brightbox-group")
 	if group_list != nil {
 		d.ServerGroups = &group_list
@@ -204,7 +204,7 @@ func (d *Driver) PreCreateCheck() error {
 	return nil
 }
 
-func (d * Driver) createSSHkey() error {
+func (d *Driver) createSSHkey() error {
 	if err := ssh.GenerateSSHKey(d.GetSSHKeyPath()); err != nil {
 		return err
 	}

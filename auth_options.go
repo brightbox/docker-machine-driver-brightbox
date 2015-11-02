@@ -9,12 +9,12 @@ import (
 var infrastructureScope = []string{"infrastructure"}
 
 type authdetails struct {
-	APIClient string
-	APISecret string
-	UserName  string
-	password  string
-	Account   string
-	ApiURL string
+	APIClient    string
+	APISecret    string
+	UserName     string
+	password     string
+	Account      string
+	ApiURL       string
 	CurrentToken *oauth2.Token
 }
 
@@ -35,7 +35,6 @@ func (authd *authdetails) tokenURL() string {
 	return authd.ApiURL + "/token"
 }
 
-
 func (authd *authdetails) tokenisedAuth() (*brightbox.Client, error) {
 	conf := oauth2.Config{
 		ClientID:     authd.APIClient,
@@ -46,11 +45,11 @@ func (authd *authdetails) tokenisedAuth() (*brightbox.Client, error) {
 		},
 	}
 	if authd.CurrentToken == nil {
-	  token, err := conf.PasswordCredentialsToken(oauth2.NoContext, authd.UserName, authd.password)
-	  if err != nil {
-		  return nil, err
-	  }
-	  authd.CurrentToken = token
+		token, err := conf.PasswordCredentialsToken(oauth2.NoContext, authd.UserName, authd.password)
+		if err != nil {
+			return nil, err
+		}
+		authd.CurrentToken = token
 	}
 	oauth_connection := conf.Client(oauth2.NoContext, authd.CurrentToken)
 	return brightbox.NewClient(authd.ApiURL, authd.Account, oauth_connection)

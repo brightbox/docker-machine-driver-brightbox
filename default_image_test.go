@@ -16,31 +16,6 @@ func TestSingleImageFound(t *testing.T) {
 	singleImage := []brightbox.Image{
 		{
 			Resource: brightbox.Resource{
-				Id: "img-abcde",
-			},
-			Name:              "ubuntu-wily-daily-amd64-server",
-			Owner:             "brightbox",
-			Arch:              "x86_64",
-			Description:       "ID: com.ubuntu.cloud:daily:download/com.ubuntu.cloud.daily:server:15.10:amd64/20151026/disk1.img, Release: daily",
-			Username:          "ubuntu",
-			Official:          true,
-			Public:            true,
-			CompatibilityMode: false,
-		},
-	}
-	image, err := GetDefaultImage(singleImage)
-	if err != nil {
-		t.Error(err)
-	}
-	if image.Id != "img-abcde" {
-		t.Error("Failed to select correct image")
-	}
-}
-
-func TestSingleImageNotFound(t *testing.T) {
-	singleImage := []brightbox.Image{
-		{
-			Resource: brightbox.Resource{
 				Id: "img-upwxc",
 			},
 			Name:              "CoreOS 766.4.0",
@@ -54,11 +29,36 @@ func TestSingleImageNotFound(t *testing.T) {
 		},
 	}
 	image, err := GetDefaultImage(singleImage)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if image.Id != "img-upwxc" {
+		t.Error("Failed to select correct image")
+	}
+}
+
+func TestSingleImageNotFound(t *testing.T) {
+	singleImage := []brightbox.Image{
+		{
+			Resource: brightbox.Resource{
+				Id: "img-abcde",
+			},
+			Name:              "ubuntu-wily-daily-amd64-server",
+			Owner:             "brightbox",
+			Arch:              "x86_64",
+			Description:       "ID: com.ubuntu.cloud:daily:download/com.ubuntu.cloud.daily:server:15.10:amd64/20151026/disk1.img, Release: daily",
+			Username:          "ubuntu",
+			Official:          true,
+			Public:            true,
+			CompatibilityMode: false,
+		},
+	}
+	image, err := GetDefaultImage(singleImage)
 	if err == nil {
-		t.Error(err)
+		t.Error("Expected no image")
 	}
 	if image != nil {
-		t.Error("Received image reference despite error")
+		t.Errorf("Received image reference %s when not expected", image.Id)
 	}
 }
 
@@ -79,13 +79,13 @@ func TestFilterAndSort(t *testing.T) {
 		},
 		{
 			Resource: brightbox.Resource{
-				Id: "img-qdjqa",
+				Id: "img-gnhsz",
 			},
-			Name:              "ubuntu-trusty-14.04-amd64-server",
+			Name:              "CoreOS 845.0.0",
 			Owner:             "brightbox",
 			Arch:              "x86_64",
-			Description:       "ID: com.ubuntu.cloud:released:download/com.ubuntu.cloud:server:14.04:amd64/20151019/disk1.img, Release: release",
-			Username:          "ubuntu",
+			Description:       "ID: com.brightbox:test/net.core-os.release:amd64-usr/845.0.0/disk1.img, Release: alpha",
+			Username:          "core",
 			Official:          true,
 			Public:            true,
 			CompatibilityMode: false,
@@ -145,9 +145,9 @@ func TestFilterAndSort(t *testing.T) {
 	}
 	image, err := GetDefaultImage(multipleImages)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
-	if image.Id != "img-77dmp" {
+	if image.Id != "img-gnhsz" {
 		t.Errorf("Received image reference %s - expecting img-77dmp", image.Id)
 	}
 }
