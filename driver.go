@@ -3,12 +3,14 @@ package brightbox
 
 import (
 	"fmt"
+	"io/ioutil"
+	"encoding/base64"
 
 	"github.com/brightbox/gobrightbox"
 	"github.com/docker/machine/libmachine/drivers"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/docker/machine/libmachine/mcnflag"
-	//	"github.com/docker/machine/libmachine/ssh"
+	"github.com/docker/machine/libmachine/ssh"
 	"github.com/docker/machine/libmachine/state"
 )
 
@@ -202,11 +204,44 @@ func (d *Driver) PreCreateCheck() error {
 	return nil
 }
 
+func (d * Driver) createSSHkey() error {
+	if err := ssh.GenerateSSHKey(d.GetSSHKeyPath()); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (d *Driver) getCloudInit() ([]byte, error) {
+
+	data := []byte(`#cloud-config
+ssh_authorized_keys:
+  - `)
+	publickey, err := ioutil.ReadFile(d.publicSSHKeyPath())
+	if err != nil {
+		return nil, err
+	}
+	return append(data, publickey...), nil
+}
+
 func (d *Driver) Create() error {
 	client, err := d.getClient()
 	if err != nil {
 		return err
 	}
+	log.Infof("Creating SSH key...")
+	err = d.createSSHkey()
+	if err != nil {
+		return err
+	}
+	userdata, err := d.getCloudInit()
+	if err != nil {
+		return err
+	}
+	encoded := base64.StdEncoding.EncodeToString(userdata)
+	d.UserData = &encoded
+	log.Infof("Creating Brightbox Server...")
+	log.Debugf("with the following Userdata")
+	log.Debugf("%s", string(userdata))
 	log.Debugf("Brightbox API Call: Create Server using image %s", d.Image)
 	server, err := client.CreateServer(&d.ServerOptions)
 	if err != nil {
@@ -251,6 +286,10 @@ func ipv6Fqdn(server *brightbox.Server) string {
 
 func publicFqdn(server *brightbox.Server) string {
 	return "public." + server.Fqdn
+}
+
+func (d *Driver) publicSSHKeyPath() string {
+	return d.GetSSHKeyPath() + ".pub"
 }
 
 func (d *Driver) GetSSHHostname() (string, error) {
