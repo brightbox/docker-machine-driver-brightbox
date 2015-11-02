@@ -167,34 +167,35 @@ func (d *Driver) checkConfig() error {
 
 // Make sure that the image details are complete
 func (d *Driver) PreCreateCheck() error {
-	switch {
-	case d.Image == "":
+	client, err := d.getClient()
+	if err != nil {
+		return err
+	}
+	var image *brightbox.Image
+	if d.Image == "" {
 		log.Info("No image specified. Looking for default image")
-		client, err := d.getClient()
-		if err != nil {
-			return err
-		}
 		log.Debugf("Brightbox API Call: List of Images")
 		images, err := client.Images()
 		if err != nil {
 			return err
 		}
-		selectedImage, err := GetDefaultImage(*images)
+		image, err = GetDefaultImage(*images)
 		if err != nil {
 			return err
 		}
-		d.Image = selectedImage.Id
-		d.SSHUser = selectedImage.Username
-	case d.SSHUser == "":
-		client, err := d.getClient()
+		d.Image = image.Id
+	} else {
+		log.Debugf("Brightbox API Call: Image Details for %s", d.Image)
+		image, err = client.Image(d.Image)
 		if err != nil {
 			return err
 		}
-		log.Debugf("Brightbox API Call: Looking for Username for Image %s", d.Image)
-		image, err := client.Image(d.Image)
-		if err != nil {
-			return err
-		}
+	}
+	if image.Arch != "x86_64" {
+		return fmt.Errorf("Docker requires a 64 bit image. Image %s not suitable", d.Image)
+	}
+	if d.SSHUser == "" {
+		log.Debug("Setting SSH Username from image details")
 		d.SSHUser = image.Username
 	}
 	log.Debugf("Image %s selected. SSH user is %s", d.Image, d.SSHUser)
