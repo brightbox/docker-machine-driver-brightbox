@@ -120,7 +120,7 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.ApiURL = flags.String("brightbox-api-url")
 	d.ServerType = flags.String("brightbox-type")
 	d.IPv6 = flags.Bool("brightbox-ipv6")
-	group_list := flags.StringSlice("brightbox-security-group")
+	group_list := flags.StringSlice("brightbox-group")
 	if group_list != nil {
 		d.ServerGroups = &group_list
 	}
