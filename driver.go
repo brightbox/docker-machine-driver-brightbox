@@ -142,6 +142,12 @@ func (d *Driver) getClient() (*brightbox.Client, error) {
 	client, err := d.authenticatedClient()
 	if err == nil {
 		d.activeClient = client
+		if client.AccountId == "" {
+		  if err := d.setDefaultAccount(); err != nil {
+			return nil, err
+		  }
+		  log.Debugf("Client Account is %s, Driver Account is %s", client.AccountId, d.Account)
+		}
 		log.Debug("Using authenticated Brightbox client")
 	}
 	return client, err
@@ -167,8 +173,7 @@ func (d *Driver) checkConfig() error {
 	return nil
 }
 
-// Make sure that the image details are complete
-func (d *Driver) PreCreateCheck() error {
+func (d *Driver) checkImage() error {
 	client, err := d.getClient()
 	if err != nil {
 		return err
@@ -204,12 +209,34 @@ func (d *Driver) PreCreateCheck() error {
 	return nil
 }
 
-func (d *Driver) createSSHkey() error {
-	if err := ssh.GenerateSSHKey(d.GetSSHKeyPath()); err != nil {
+func (d*Driver) setDefaultAccount() error {
+	log.Debug("Looking for default account")
+	client := d.activeClient
+	log.Debug("Brightbox API Call: List of Accounts")
+	accounts, err := client.Accounts()
+	switch {
+	case err != nil:
 		return err
+	case len(*accounts) == 1:
+		log.Debug("Setting default account")
+		d.Account = (*accounts)[0].Id
+		client.AccountId = d.Account
+		return nil
+	default:
+		return fmt.Errorf(errorMandatoryEnvOrOption, "Account", "BRIGHTBOX_ACCOUNT", "--brightbox-account")
 	}
-	return nil
 }
+
+
+// Make sure that the image details are complete
+func (d *Driver) PreCreateCheck() error {
+	return d.checkImage()
+}
+
+func (d *Driver) createSSHkey() error {
+      return ssh.GenerateSSHKey(d.GetSSHKeyPath())
+}
+
 
 func (d *Driver) getCloudInit() ([]byte, error) {
 
