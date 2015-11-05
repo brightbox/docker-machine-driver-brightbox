@@ -186,7 +186,7 @@ func (d *Driver) checkImage() error {
 		if err != nil {
 			return err
 		}
-		image, err = GetDefaultImage(*images)
+		image, err = GetDefaultImage(images)
 		if err != nil {
 			return err
 		}
@@ -217,9 +217,9 @@ func (d*Driver) setDefaultAccount() error {
 	switch {
 	case err != nil:
 		return err
-	case len(*accounts) == 1:
+	case len(accounts) == 1:
 		log.Debug("Setting default account")
-		d.Account = (*accounts)[0].Id
+		d.Account = accounts[0].Id
 		client.AccountId = d.Account
 		return nil
 	default:
