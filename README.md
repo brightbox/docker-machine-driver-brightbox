@@ -28,7 +28,7 @@ Docker Machine Version: 0.5.0-rc4 (721f39d)
 docker-machine version 0.5.0-rc4 (721f39d)
 ```
 
-Check that docker machine can see the Brightbox driver by asking for
+Check that `docker-machine` can see the Brightbox driver by asking for
 the driver help.
 
 ```
@@ -99,32 +99,6 @@ docker host you want. You can see them all in the help list by running
 
 Here are the most useful options:
 
-*   `--brightbox-group`
-
-    You can add [server groups, and therefore firewall
-    policies](https://www.brightbox.com/docs/guides/cli/firewall/)
-    using the `--brightbox-group` option. Remember firewall policies
-    are cumulative on the Brightbox Cloud and specifying groups
-    replaces the default option of putting the server in the default
-    group.
-
-*   `--brightbox-image`
-
-    You can select the image you want to use for the docker host by
-    specifiying the `img-xxxxx` id of the image you require. Docker requires
-    a 64-bit operating system. You can get the image id from the Image
-    Library in [Brightbox Manager](https://manage.brightbox.com) or [via
-    the CLI](https://www.brightbox.com/docs/guides/cli/image-library/).
-
-*   `--brightbox-ipv4`
-
-    This is a flag that makes `docker-machine` access the server over
-    IPv4 rather than IPv6. Brightbox servers run on a private IPv4
-    network by default, so this will stop access to the server from
-    outside the cloud unless you map a CloudIP to the server in
-    [Brightbox Manager](https://manage.brightbox.com) or [via the
-    CLI](https://www.brightbox.com/docs/guides/cli/cloud-ips/).
-
 *   `--brightbox-type`
 
     By default `docker-machine` creates a small 1gb SSD server as the
@@ -137,6 +111,23 @@ Here are the most useful options:
     For more details on the available ids and handles [use the
     CLI](https://www.brightbox.com/docs/guides/cli/installation/)
     `brightbox types` command
+
+*   `--brightbox-image`
+
+    You can select the image you want to use for the docker host by
+    specifiying the `img-xxxxx` id of the image you require. Docker requires
+    a 64-bit operating system. You can get the image id from the Image
+    Library in [Brightbox Manager](https://manage.brightbox.com) or [via
+    the CLI](https://www.brightbox.com/docs/guides/cli/image-library/).
+
+*   `--brightbox-group`
+
+    You can add [server groups, and therefore firewall
+    policies](https://www.brightbox.com/docs/guides/cli/firewall/)
+    using the `--brightbox-group` option. Remember firewall policies
+    are cumulative on the Brightbox Cloud and specifying groups
+    replaces the default option of putting the server in the default
+    group.
 
 *   `--brightbox-zone`
 
@@ -151,6 +142,15 @@ Here are the most useful options:
     For more details on the available ids and handles [use the
     CLI](https://www.brightbox.com/docs/guides/cli/installation/)
     `brightbox zones` command
+
+*   `--brightbox-ipv4`
+
+    This is a flag that makes `docker-machine` access the server over
+    IPv4 rather than IPv6. Brightbox servers run on a private IPv4
+    network by default, so this will stop access to the server from
+    outside the cloud unless you map a CloudIP to the server in
+    [Brightbox Manager](https://manage.brightbox.com) or [via the
+    CLI](https://www.brightbox.com/docs/guides/cli/cloud-ips/).
 
 ## Help
 
