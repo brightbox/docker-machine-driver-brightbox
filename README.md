@@ -2,33 +2,37 @@
 
 ![](/docs/img/logo.png)
 
-Install this driver in your PATH and you can create docker hosts with ease on the Brightbox Cloud.
+Install this driver in your PATH and you can create docker hosts with
+ease on [Brightbox Cloud](https://www.brightbox.com).
 
-If you are new to Brightbox Cloud you can [sign up in 2 minutes](https://manage.brightbox.com/signup) and get your user credentials. You'll get a £20 credit to get you started creating docker hosts. 
+If you are new to Brightbox Cloud you can [sign up in 2
+minutes](https://manage.brightbox.com/signup) and get your user
+credentials. You'll get a £20 credit to get you started creating
+docker hosts.
 
 ## Installation
 
 ### From a Release
 
-The release versions of the driver include a binary for Linux,
-MacOS and Windows. You can find them on the [release page of the
-repo](../../releases)
+Official release versions of the driver include a binary for Linux,
+MacOS and Windows. You can find them on the [GitHub releases
+page](https://github.com/brightbox/docker-machine-driver-brightbox/releases).
 
 Pick the binary you require, download it into a directory on your
 PATH as a file called `docker-machine-driver-brightbox` and make it
 executable. For example to download the linux version run
 
 ```
-cd ~/bin && \
-curl -L -o docker-machine-driver-brightbox \
+curl -L -o ~/bin/docker-machine-driver-brightbox \
 https://github.com/brightbox/docker-machine-driver-brightbox/releases/download/v0.0.1/bin.docker-machine-driver-brightbox_linux-amd64 && \
-chmod 755 docker-machine-driver-brightbox
+chmod 755 ~/bin/docker-machine-driver-brightbox
 
 ```
 
 ### From Source
 
-To build and install, first clone this repo onto a server running Docker, then run:
+To build and install, first clone this repo onto a server running Docker,
+then run:
 
 ```
 $ make containerbuild && sudo make install
@@ -38,7 +42,8 @@ which will install the driver into `/usr/local/bin`
 
 ## Using the driver
 
-To use the driver first make sure you are running at least [version 0.5.0 of `docker-machine`](https://github.com/docker/machine/releases).
+To use the driver first make sure you are running at least [version
+0.5.0 of `docker-machine`](https://github.com/docker/machine/releases).
 
 ```
 $ docker-machine -v
@@ -64,12 +69,12 @@ Options:
 ...
 ```
 
-To create a machine you'll need the user credentials.
+To create a machine you'll need your user credentials.
 
 If you are
 [collaborating](https://www.brightbox.com/docs/reference/collaboration/)
-with other Brightbox users make sure you know the id of the account you
-want to work with.
+with other Brightbox users make sure you specify the identifier of the
+account you want to work with.
 
 Then creating a docker host is as simple as
 
@@ -91,9 +96,8 @@ To see how to connect Docker to this machine, run: docker-machine env example
 or if you don't want your password stored or displayed anywhere
 
 ```
-$ (export BRIGHTBOX_PASSWORD; \
-echo -n "Enter password: "; \
-read -s BRIGHTBOX_PASSWORD && \
+$ (export BRIGHTBOX_PASSWORD;
+read -s -p "Enter password: " BRIGHTBOX_PASSWORD && \
 docker-machine create -d brightbox \
 --brightbox-user-name frances@example.com example)
 ```
@@ -125,18 +129,19 @@ Here are the most useful options:
     the available sizes, and then specify the memory size plus either
     `.ssd` or `.ssd-high-io` (for the larger disk version). So if you
     want a 4GB server just use `4gb.ssd` for this option.
-    
+
     For more details on the available ids and handles [use the
     CLI](https://www.brightbox.com/docs/guides/cli/installation/)
     `brightbox types` command
 
 *   `--brightbox-image`
 
-    You can select the image you want to use for the docker host by
-    specifiying the `img-xxxxx` id of the image you require. Docker requires
-    a 64-bit operating system. You can get the image id from the Image
-    Library in [Brightbox Manager](https://manage.brightbox.com) or [via
-    the CLI](https://www.brightbox.com/docs/guides/cli/image-library/).
+    You can select the image you want to use for the docker
+    host by specifiying the `img-xxxxx` id of the image you
+    require. Docker requires a 64-bit operating system. You
+    can get the image id from the Image Library in [Brightbox
+    Manager](https://manage.brightbox.com) or [via the
+    CLI](https://www.brightbox.com/docs/guides/cli/image-library/).
 
 *   `--brightbox-group`
 
@@ -172,7 +177,8 @@ Here are the most useful options:
 
 ## Help
 
-If you need help using this driver, drop an email to support at brightbox dot com.
+If you need help using this driver, drop an email to support at brightbox
+dot com.
 
 ## License
 
