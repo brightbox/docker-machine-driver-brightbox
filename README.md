@@ -19,10 +19,9 @@ PATH as a file called `docker-machine-driver-brightbox` and make it
 executable. For example to download the linux version run
 
 ```
-cd ~/bin && \
-curl -L -o docker-machine-driver-brightbox \
+curl -L -o ~/bin/docker-machine-driver-brightbox \
 https://github.com/brightbox/docker-machine-driver-brightbox/releases/download/v0.0.1/bin.docker-machine-driver-brightbox_linux-amd64 && \
-chmod 755 docker-machine-driver-brightbox
+chmod 755 ~/bin/docker-machine-driver-brightbox
 
 ```
 
