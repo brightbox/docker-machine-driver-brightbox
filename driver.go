@@ -19,8 +19,12 @@ const (
 	defaultClientID     = "app-dkmch"
 	defaultClientSecret = "uogoelzgt0nwawb"
 
-	defaultSSHPort = 22
-	driverName     = "brightbox"
+	// Server creation defaults
+	defaultSSHPort    = 22
+	defaultIPV6       = true
+	defaultServerType = "1gb.ssd"
+
+	driverName = "brightbox"
 )
 
 type Driver struct {
@@ -102,6 +106,7 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			EnvVar: "BRIGHTBOX_TYPE",
 			Name:   "brightbox-type",
 			Usage:  "Brightbox Cloud Server Type",
+			Value:  defaultServerType,
 		},
 	}
 }
@@ -143,10 +148,10 @@ func (d *Driver) getClient() (*brightbox.Client, error) {
 	if err == nil {
 		d.activeClient = client
 		if client.AccountId == "" {
-		  if err := d.setDefaultAccount(); err != nil {
-			return nil, err
-		  }
-		  log.Debugf("Client Account is %s, Driver Account is %s", client.AccountId, d.Account)
+			if err := d.setDefaultAccount(); err != nil {
+				return nil, err
+			}
+			log.Debugf("Client Account is %s, Driver Account is %s", client.AccountId, d.Account)
 		}
 		log.Debug("Using authenticated Brightbox client")
 	}
@@ -209,7 +214,7 @@ func (d *Driver) checkImage() error {
 	return nil
 }
 
-func (d*Driver) setDefaultAccount() error {
+func (d *Driver) setDefaultAccount() error {
 	log.Debug("Looking for default account")
 	client := d.activeClient
 	log.Debug("Brightbox API Call: List of Accounts")
@@ -227,16 +232,14 @@ func (d*Driver) setDefaultAccount() error {
 	}
 }
 
-
 // Make sure that the image details are complete
 func (d *Driver) PreCreateCheck() error {
 	return d.checkImage()
 }
 
 func (d *Driver) createSSHkey() error {
-      return ssh.GenerateSSHKey(d.GetSSHKeyPath())
+	return ssh.GenerateSSHKey(d.GetSSHKeyPath())
 }
-
 
 func (d *Driver) getCloudInit() ([]byte, error) {
 

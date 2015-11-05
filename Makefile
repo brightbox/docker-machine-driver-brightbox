@@ -1,6 +1,6 @@
 default: build
 
-version := "v0.0.1"
+version := "v0.0.2"
 version_description := "Docker Machine Driver Plugin to access Brightbox Cloud"
 human_name := "Brightbox Cloud Driver"
 
