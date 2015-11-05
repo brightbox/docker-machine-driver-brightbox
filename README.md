@@ -2,7 +2,7 @@
 
 ![](/docs/img/logo.png)
 
-Install this driver in your PATH and you can create docker hosts with ease on the Brightbox Cloud.
+Install this driver in your PATH and you can create docker hosts with ease on [Brightbox Cloud](https://www.brightbox.com).
 
 If you are new to Brightbox Cloud you can [sign up in 2 minutes](https://manage.brightbox.com/signup) and get your user credentials. You'll get a £20 credit to get you started creating docker hosts. 
 
@@ -10,9 +10,9 @@ If you are new to Brightbox Cloud you can [sign up in 2 minutes](https://manage.
 
 ### From a Release
 
-The release versions of the driver include a binary for Linux,
-MacOS and Windows. You can find them on the [release page of the
-repo](../../releases)
+Official release versions of the driver include a binary for Linux, MacOS and
+Windows. You can find them on the
+[GitHub releases page](https://github.com/brightbox/docker-machine-driver-brightbox/releases).
 
 Pick the binary you require, download it into a directory on your
 PATH as a file called `docker-machine-driver-brightbox` and make it
@@ -64,11 +64,11 @@ Options:
 ...
 ```
 
-To create a machine you'll need the user credentials.
+To create a machine you'll need your user credentials.
 
 If you are
-[collaborating](https://www.brightbox.com/docs/reference/collaboration/)
-with other Brightbox users make sure you know the id of the account you
+[collaborating](https://www.brightbox.com/docs/reference/collaboration/) with
+other Brightbox users make sure you specify the identifier of the account you
 want to work with.
 
 Then creating a docker host is as simple as
