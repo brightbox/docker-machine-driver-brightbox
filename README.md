@@ -8,6 +8,24 @@ If you are new to Brightbox Cloud you can [sign up in 2 minutes](https://manage.
 
 ## Installation
 
+### From a Release
+
+The release versions of the driver include a binary for Linux,
+MacOS and Windows. You can find them on the [release page of the
+repo](../../releases)
+
+Pick the binary you require, download it into a directory on your
+PATH as a file called `docker-machine-driver-brightbox` and make it
+executable. For example to download the linux version run
+
+```
+cd ~/bin && \
+curl -L -o docker-machine-driver-brightbox \
+https://github.com/brightbox/docker-machine-driver-brightbox/releases/download/v0.0.1/bin.docker-machine-driver-brightbox_linux-amd64 && \
+chmod 755 docker-machine-driver-brightbox
+
+```
+
 ### From Source
 
 To build and install, first clone this repo onto a server running Docker, then run:
