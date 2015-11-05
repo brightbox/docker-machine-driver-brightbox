@@ -91,11 +91,9 @@ To see how to connect Docker to this machine, run: docker-machine env example
 or if you don't want your password stored or displayed anywhere
 
 ```
-$ (export BRIGHTBOX_PASSWORD; \
-echo -n "Enter password: "; \
-read -s BRIGHTBOX_PASSWORD && \
+$ read -s -p "Enter password: " BRIGHTBOX_PASSWORD && \
 docker-machine create -d brightbox \
---brightbox-user-name frances@example.com example)
+--brightbox-user-name frances@example.com example
 ```
 
 This creates a small server in the default [server
