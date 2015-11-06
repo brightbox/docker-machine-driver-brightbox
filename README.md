@@ -40,6 +40,16 @@ $ make containerbuild && sudo make install
 
 which will install the driver into `/usr/local/bin`
 
+## Obtaining credentials
+
+To use the driver you will need to create a 'Full Privileges' [API client
+ within Brightbox
+ Manager](http://manage.brightbox.com/account/api_clients). If you're
+[collaborating](https://www.brightbox.com/docs/reference/collaboration/)
+with other Brightbox Users, make sure you select the
+ correct account first or, if you have insufficient privilege, obtain
+ the API client details from the owner of the account.
+
 ## Using the driver
 
 To use the driver first make sure you are running at least [version
@@ -58,7 +68,7 @@ the driver help.
 $ docker-machine create -d brightbox | more
 Usage: docker-machine create [OPTIONS] [arg...]
 
-Create a machine.
+## Create a machine.
 
 Specify a driver with --driver to include the create flags for that driver in the help text.
 
@@ -69,18 +79,13 @@ Options:
 ...
 ```
 
-To create a machine you'll need your user credentials.
-
-If you are
-[collaborating](https://www.brightbox.com/docs/reference/collaboration/)
-with other Brightbox users make sure you specify the identifier of the
-account you want to work with.
+To create a machine you'll need the API Client details you obtained earlier. 
 
 Then creating a docker host is as simple as
 
 ```
-$ docker-machine create -d brightbox --brightbox-user-name frances@example.com \
---brightbox-password SecretPassword example
+$ docker-machine create -d brightbox --brightbox-client cli-xyzab \
+--brightbox-client-secret Secret example
 Running pre-create checks...
 Creating machine...
 Waiting for machine to be running, this may take a few minutes...
@@ -93,13 +98,13 @@ Setting Docker configuration on the remote daemon...
 To see how to connect Docker to this machine, run: docker-machine env example
 ```
 
-or if you don't want your password stored or displayed anywhere
+or if you don't want your client secret displayed anywhere:
 
 ```
-$ (export BRIGHTBOX_PASSWORD;
-read -s -p "Enter password: " BRIGHTBOX_PASSWORD && \
+$ (export BRIGHTBOX_CLIENT_SECRET;
+read -s -p "Enter Secret: " BRIGHTBOX_CLIENT_SECRET && \
 docker-machine create -d brightbox \
---brightbox-user-name frances@example.com example)
+--brightbox-client cli-xyzab  example)
 ```
 
 This creates a small server in the default [server
