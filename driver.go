@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
+	"sync"
 
 	"github.com/brightbox/gobrightbox"
 	"github.com/docker/machine/libmachine/drivers"
@@ -24,7 +25,8 @@ const (
 	defaultIPV6       = true
 	defaultServerType = "1gb.ssd"
 
-	driverName = "brightbox"
+	driverName     = "brightbox"
+	passwordEnvVar = "BRIGHTBOX_PASSWORD"
 )
 
 type Driver struct {
@@ -33,6 +35,7 @@ type Driver struct {
 	brightbox.ServerOptions
 	MachineID    string
 	IPv6         bool
+	mu           sync.Mutex //guards activeClient
 	activeClient *brightbox.Client
 }
 
@@ -67,7 +70,7 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			Usage:  "Brightbox Cloud User Name",
 		},
 		mcnflag.StringFlag{
-			EnvVar: "BRIGHTBOX_PASSWORD",
+			EnvVar: passwordEnvVar,
 			Name:   "brightbox-password",
 			Usage:  "Brightbox Cloud Password for User Name",
 		},
@@ -136,26 +139,30 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	return d.checkConfig()
 }
 
-// Try and avoid authenticating more than once
-// Store the authenticated api client in the driver for future use
+// Use a mutex to try and avoid authenticating more than once - even
+// with parallel calls. Cache the authenticated api client in the driver
+// for future use within this run.
 func (d *Driver) getClient() (*brightbox.Client, error) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
 	if d.activeClient != nil {
 		log.Debug("Reusing authenticated Brightbox client")
 		return d.activeClient, nil
 	}
 	log.Debug("Authenticating Credentials against Brightbox API")
 	client, err := d.authenticatedClient()
-	if err == nil {
-		d.activeClient = client
-		if client.AccountId == "" {
-			if err := d.setDefaultAccount(); err != nil {
-				return nil, err
-			}
-			log.Debugf("Client Account is %s, Driver Account is %s", client.AccountId, d.Account)
-		}
-		log.Debug("Using authenticated Brightbox client")
+	if err != nil {
+		return nil, err
 	}
-	return client, err
+	d.activeClient = client
+	if client.AccountId == "" {
+		if err := d.setDefaultAccount(); err != nil {
+			return nil, err
+		}
+		log.Debugf("Client Account is %s, Driver Account is %s", client.AccountId, d.Account)
+	}
+	log.Debug("Using authenticated Brightbox client")
+	return client, nil
 }
 
 const (
