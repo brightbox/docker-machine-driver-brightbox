@@ -9,16 +9,17 @@ import (
 )
 
 const (
+	//DefaultArch is the default image archiecture
 	DefaultArch = "x86_64"
-	//The tag is looked for in the name of the image
+	//DefaultImageTag is looked for in the name of the Image
 	DefaultImageTag = "CoreOS"
 )
 
 /*
-Searches the supplied Image List for official Images and selects one
-according to the constant definitions in this file. Returns a reference
-to that Image.  If no Image matches the default settings you will get
-an error.
+GetDefaultImage searches the supplied Image List for official Images and
+selects one according to the constant definitions in this file. Returns
+a reference to that Image.  If no Image matches the default settings
+you will get an error.
 */
 func GetDefaultImage(images []brightbox.Image) (*brightbox.Image, error) {
 	filteredImages := filterImages(images, defaultImage)
@@ -31,7 +32,7 @@ func GetDefaultImage(images []brightbox.Image) (*brightbox.Image, error) {
 }
 
 func filterImages(images []brightbox.Image, selector func(*brightbox.Image) bool) []*brightbox.Image {
-	result := make([]*brightbox.Image, 0)
+	var result []*brightbox.Image
 	for index := range images {
 		if selector(&images[index]) {
 			result = append(result, &images[index])

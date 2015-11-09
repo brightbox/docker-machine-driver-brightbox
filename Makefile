@@ -35,7 +35,7 @@ clean:
 	rm bin/docker-machine*
 
 compile:
-	GOGC=off go build -o bin/$(current_dir)$(BIN_SUFFIX) bin/main.go
+	GOGC=off CGOENABLED=0 go build -ldflags "-s" -o bin/$(current_dir)$(BIN_SUFFIX) bin/main.go
 
 print-success:
 	@echo

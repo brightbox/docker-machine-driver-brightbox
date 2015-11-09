@@ -85,8 +85,8 @@ func TestDefaultValues(t *testing.T) {
 	if driver.Account != "" {
 		t.Errorf("Incorrect default Account: %s", driver.Account)
 	}
-	if driver.ApiURL != brightbox.DefaultRegionApiURL {
-		t.Errorf("Incorrect default API URL: %s", driver.ApiURL)
+	if driver.APIURL != brightbox.DefaultRegionApiURL {
+		t.Errorf("Incorrect default API URL: %s", driver.APIURL)
 	}
 	if driver.ServerType != defaultServerType {
 		t.Errorf("Incorrect default ServerType: %s", driver.ServerType)

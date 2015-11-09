@@ -16,7 +16,7 @@ type authdetails struct {
 	UserName     string
 	password     string
 	Account      string
-	ApiURL       string
+	APIURL       string
 	currentToken *oauth2.Token
 }
 
@@ -41,7 +41,7 @@ func (authd *authdetails) backfillPassword() {
 }
 
 func (authd *authdetails) tokenURL() string {
-	return authd.ApiURL + "/token"
+	return authd.APIURL + "/token"
 }
 
 func (authd *authdetails) tokenisedAuth() (*brightbox.Client, error) {
@@ -60,8 +60,8 @@ func (authd *authdetails) tokenisedAuth() (*brightbox.Client, error) {
 		}
 		authd.currentToken = token
 	}
-	oauth_connection := conf.Client(oauth2.NoContext, authd.currentToken)
-	return brightbox.NewClient(authd.ApiURL, authd.Account, oauth_connection)
+	oauthConnection := conf.Client(oauth2.NoContext, authd.currentToken)
+	return brightbox.NewClient(authd.APIURL, authd.Account, oauthConnection)
 }
 
 func (authd *authdetails) apiClientAuth() (*brightbox.Client, error) {
@@ -71,6 +71,6 @@ func (authd *authdetails) apiClientAuth() (*brightbox.Client, error) {
 		Scopes:       infrastructureScope,
 		TokenURL:     authd.tokenURL(),
 	}
-	oauth_connection := conf.Client(oauth2.NoContext)
-	return brightbox.NewClient(authd.ApiURL, authd.Account, oauth_connection)
+	oauthConnection := conf.Client(oauth2.NoContext)
+	return brightbox.NewClient(authd.APIURL, authd.Account, oauthConnection)
 }

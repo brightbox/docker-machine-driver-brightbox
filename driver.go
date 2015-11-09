@@ -1,4 +1,4 @@
-// Brightbox Cloud Driver for Docker Machine
+//Package brightbox is the Brightbox Cloud Driver for Docker Machine
 package brightbox
 
 import (
@@ -29,6 +29,8 @@ const (
 	passwordEnvVar = "BRIGHTBOX_PASSWORD"
 )
 
+//Driver contains the details necessary for docker-machine to access
+//the Brightbox Cloud
 type Driver struct {
 	drivers.BaseDriver
 	authdetails
@@ -39,8 +41,8 @@ type Driver struct {
 	activeClient *brightbox.Client
 }
 
-//Backward compatible Driver factory method.  Using new(brightbox.Driver)
-//is preferred
+//NewDriver is a backward compatible Driver factory method.  Using
+//new(brightbox.Driver) is preferred
 func NewDriver(hostName, storePath string) Driver {
 	return Driver{
 		BaseDriver: drivers.BaseDriver{
@@ -125,12 +127,12 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.password = flags.String("brightbox-password")
 	d.Account = flags.String("brightbox-account")
 	d.Image = flags.String("brightbox-image")
-	d.ApiURL = flags.String("brightbox-api-url")
+	d.APIURL = flags.String("brightbox-api-url")
 	d.ServerType = flags.String("brightbox-type")
 	d.IPv6 = !flags.Bool("brightbox-ipv4")
-	group_list := flags.StringSlice("brightbox-group")
-	if group_list != nil {
-		d.ServerGroups = &group_list
+	groupList := flags.StringSlice("brightbox-group")
+	if groupList != nil {
+		d.ServerGroups = &groupList
 	}
 	d.Zone = flags.String("brightbox-zone")
 	d.SSHPort = defaultSSHPort
@@ -239,7 +241,7 @@ func (d *Driver) setDefaultAccount() error {
 	}
 }
 
-// Make sure that the image details are complete
+// PreCreateCheck makes sure that the image details are complete
 func (d *Driver) PreCreateCheck() error {
 	return d.checkImage()
 }
