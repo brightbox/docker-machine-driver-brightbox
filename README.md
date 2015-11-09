@@ -24,7 +24,7 @@ executable. For example to download the linux version run
 
 ```
 curl -L -o ~/bin/docker-machine-driver-brightbox \
-https://github.com/brightbox/docker-machine-driver-brightbox/releases/download/v0.0.1/bin.docker-machine-driver-brightbox_linux-amd64 && \
+https://github.com/brightbox/docker-machine-driver-brightbox/releases/download/v0.0.3/bin.docker-machine-driver-brightbox_linux-amd64 && \
 chmod 755 ~/bin/docker-machine-driver-brightbox
 
 ```
