@@ -8,7 +8,7 @@ ease on [Brightbox Cloud](https://www.brightbox.com).
 If you are new to Brightbox Cloud you can [sign up in 2
 minutes](https://manage.brightbox.com/signup) and get your user
 credentials. You'll get a £20 credit to get you started creating
-docker hosts.
+Docker hosts.
 
 ## Installation
 
@@ -47,7 +47,7 @@ To use the driver you will need to create a 'Full Privileges' [API client
  Manager](http://manage.brightbox.com/account/api_clients). If you're
 [collaborating](https://www.brightbox.com/docs/reference/collaboration/)
 with other Brightbox Users, make sure you select the
- correct account first or, if you have insufficient privilege, obtain
+ correct account first or, if you have insufficient privileges, obtain
  the API client details from the owner of the account.
 
 ## Using the driver
@@ -81,7 +81,7 @@ Options:
 
 To create a machine you'll need the API Client details you obtained earlier. 
 
-Then creating a docker host is as simple as
+Then creating a Docker host is as simple as
 
 ```
 $ docker-machine create -d brightbox --brightbox-client cli-xyzab \
@@ -107,21 +107,22 @@ docker-machine create -d brightbox \
 --brightbox-client cli-xyzab  example)
 ```
 
-This creates a small server in the default [server
-group](https://www.brightbox.com/docs/guides/cli/server-groups/)
-for the account, and accesses the server over IPv6. If you are
-running `docker-machine` on another server on the Brightbox Cloud
-then this will work straight away. However if `docker-machine`
-is installed elsewhere you'll need to [alter your firewall
-policy](https://www.youtube.com/watch?v=Q3eYMV_hbDk&hd=1) first to
-include an appropriate inbound rule into the Docker access port which
-runs over TCP on port 2376. Make sure this rule is tight as there is no
-authentication on the docker port.
+This creates a small server in the default
+[server group](https://www.brightbox.com/docs/guides/cli/server-groups/) for the
+account, and accesses the server over IPv6.
+
+If you are running `docker-machine` on another server on the same Brightbox
+Cloud account and are using the default firewall policy, then this will work
+straight away. If you're running `docker-machine` from elsewhere then you'll
+need to
+[alter your firewall policy](https://www.youtube.com/watch?v=Q3eYMV_hbDk&hd=1)
+first to allow access in to Docker on TCP port 2376. Make sure this rule is
+tight as there is no authentication on the Docker port.
 
 ## Changing the settings
 
 The driver has several options that you can use to get precisely the
-docker host you want. You can see them all in the help list by running
+Docker host you want. You can see them all in the help list by running
 `docker-machine create -d brightbox | more`
 
 Here are the most useful options:
@@ -129,7 +130,7 @@ Here are the most useful options:
 *   `--brightbox-type`
 
     By default `docker-machine` creates a small 1gb SSD server as the
-    docker host. If you want a larger one, check the [server sizing
+    Docker host. If you want a larger one, check the [server sizing
     page](https://www.brightbox.com/pricing/#full-pricing-table) for
     the available sizes, and then specify the memory size plus either
     `.ssd` or `.ssd-high-io` (for the larger disk version). So if you
@@ -141,19 +142,18 @@ Here are the most useful options:
 
 *   `--brightbox-image`
 
-    You can select the image you want to use for the docker
-    host by specifiying the `img-xxxxx` id of the image you
-    require. Docker requires a 64-bit operating system. You
-    can get the image id from the Image Library in [Brightbox
-    Manager](https://manage.brightbox.com) or [via the
-    CLI](https://www.brightbox.com/docs/guides/cli/image-library/).
+    You can select the image you want to use for the Docker host by specifying
+    the `img-xxxxx` id of the image you require. You can get the image id from
+    the Image Library in [Brightbox Manager](https://manage.brightbox.com) or
+    [via the CLI](https://www.brightbox.com/docs/guides/cli/image-library/). Remember
+    that Docker requires a 64-bit operating system.
 
 *   `--brightbox-group`
 
     You can add [server groups, and therefore firewall
     policies](https://www.brightbox.com/docs/guides/cli/firewall/)
     using the `--brightbox-group` option. Remember firewall policies
-    are cumulative on the Brightbox Cloud and specifying groups
+    are cumulative on Brightbox Cloud and specifying groups
     replaces the default option of putting the server in the default
     group.
 
@@ -161,10 +161,10 @@ Here are the most useful options:
 
     Every
     [Region](https://www.brightbox.com/docs/reference/glossary/#region)
-    on the Brightbox Cloud has [multiple availability
+    on Brightbox Cloud has [multiple availability
     zones](https://www.brightbox.com/docs/reference/glossary/#zone)
     within it. Normally the default auto-allocation does the right thing
-    but if you want specific placement specify the zone id or handle
+    but if you want specific placement then specify the zone id or handle
     with this option.
 
     For more details on the available ids and handles [use the
@@ -173,12 +173,11 @@ Here are the most useful options:
 
 *   `--brightbox-ipv4`
 
-    This is a flag that makes `docker-machine` access the server over
-    IPv4 rather than IPv6. Brightbox servers run on a private IPv4
-    network by default, so this will stop access to the server from
-    outside the cloud unless you map a CloudIP to the server in
-    [Brightbox Manager](https://manage.brightbox.com) or [via the
-    CLI](https://www.brightbox.com/docs/guides/cli/cloud-ips/).
+    This is a flag that makes `docker-machine` access the server over IPv4
+    rather than IPv6. Brightbox servers run on a private IPv4 network by
+    default, so this will stop external access to the server from unless you map
+    a Cloud IP in [Brightbox Manager](https://manage.brightbox.com) or
+    [via the CLI](https://www.brightbox.com/docs/guides/cli/cloud-ips/).
 
 ## Help
 
