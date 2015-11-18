@@ -20,13 +20,22 @@ page](https://github.com/brightbox/docker-machine-driver-brightbox/releases).
 
 Pick the binary you require, download it into a directory on your
 PATH as a file called `docker-machine-driver-brightbox` and make it
-executable. For example to download the linux version run
+executable.
+
+Linux:
 
 ```
-curl -L -o ~/bin/docker-machine-driver-brightbox \
-https://github.com/brightbox/docker-machine-driver-brightbox/releases/download/v0.0.3/bin.docker-machine-driver-brightbox_linux-amd64 && \
+curl -sSL -o ~/bin/docker-machine-driver-brightbox \
+https://github.com/brightbox/docker-machine-driver-brightbox/releases/download/v0.0.4/bin.docker-machine-driver-brightbox_linux-amd64 && \
 chmod 755 ~/bin/docker-machine-driver-brightbox
 
+```
+
+Mac OSX
+
+```
+sudo curl -sSL -o /usr/local/bin/docker-machine-driver-brightbox https://github.com/brightbox/docker-machine-driver-brightbox/releases/download/v0.0.4/bin.docker-machine-driver-brightbox_darwin-amd64 &&
+sudo chmod 755 /usr/local/bin/docker-machine-driver-brightbox
 ```
 
 ### From Source
@@ -53,12 +62,11 @@ with other Brightbox Users, make sure you select the
 ## Using the driver
 
 To use the driver first make sure you are running at least [version
-0.5.0 of `docker-machine`](https://github.com/docker/machine/releases).
+0.5.1 of `docker-machine`](https://github.com/docker/machine/releases).
 
 ```
 $ docker-machine -v
-Docker Machine Version: 0.5.0-rc4 (721f39d)
-docker-machine version 0.5.0-rc4 (721f39d)
+docker-machine version 0.5.1 (7e8e38e)
 ```
 
 Check that `docker-machine` can see the Brightbox driver by asking for
